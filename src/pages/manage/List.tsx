@@ -4,6 +4,7 @@ import styles from './common.module.scss'
 import { useSearchParams } from "react-router-dom";
 import { useTitle } from "ahooks";
 import { Typography } from "antd";
+import ListSearch from "../../components/ListSearch";
 
 const rowQuestionLIst = [
     {_id: 'q1', title: '问卷1', isPublished: false, isStar: false, answerCount: 5, createAt: '3月10日 13:23'},
@@ -15,7 +16,6 @@ const rowQuestionLIst = [
 const List: FC = () => {
     useTitle("YOYO问卷-我的问卷")
     const [searchParams] = useSearchParams()
-    console.log('keyword', searchParams.get('keyword'))
     const [questionList, setQuestionList] = useState(rowQuestionLIst)
     const { Title } = Typography
     return (
@@ -26,7 +26,7 @@ const List: FC = () => {
                 </div>
 
                 <div className={styles.right}>
-                    (搜索)
+                    <ListSearch />
                 </div>
             </div>
 

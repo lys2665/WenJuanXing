@@ -4,6 +4,7 @@ import { Empty, Typography } from "antd";
 
 import styles from"./common.module.scss"
 import QuestionCard from "../../components/QuestionCard";
+import ListSearch from "../../components/ListSearch";
 
 const rawQuestionList = [
     {_id: 'q1', title: '问卷1', isPublished: false, isStar: true, answerCount: 5, createAt: '3月10日 13:23'},
@@ -23,7 +24,7 @@ const Star = () => {
                 </div>
 
                 <div className={styles.right}>
-                    (搜索)
+                    <ListSearch />
                 </div>
             </div>
 

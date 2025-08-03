@@ -5,6 +5,7 @@ import React, { useState } from "react";
 
 import styles from './common.module.scss'
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+import ListSearch from "../../components/ListSearch";
 
 const { Title } = Typography
 const { confirm } = Modal
@@ -84,7 +85,7 @@ const Trash = () => {
                 </div>
 
                 <div className={styles.right}>
-                    (搜索)
+                    <ListSearch />
                 </div>
             </div>
 
