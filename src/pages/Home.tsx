@@ -1,15 +1,17 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { data, useNavigate } from "react-router-dom";
 import { Button, Typography } from "antd";
 
 import { MANAGE_INDEX_PATHNAME } from "../router";
 import styles from './Home.module.scss' 
 
 
+
 const { Title, Paragraph} = Typography
 
 const Home = () => {
     const nav = useNavigate()
+
     // function clickHandler() {
     //     nav('/login')
     // }

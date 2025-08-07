@@ -1,10 +1,15 @@
 import React from "react";
+import useLoadQuestion from "../../../hooks/useLoadQuestionData";
 
 const Stat = () => {
+
+    const { loading, data } = useLoadQuestion()
+
     return (
-        <>
-            <p>Stat</p>
-        </>
+        <div>
+            <p>Stat page</p>
+            {loading ? <p>loading</p> : <p>{JSON.stringify(data)}</p>}
+        </div>
     )
 }
 

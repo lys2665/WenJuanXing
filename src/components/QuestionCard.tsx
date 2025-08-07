@@ -1,8 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import styles from './QuestionCard.module.scss'
 import { Button, Divider, message, Modal, Popconfirm, Space, Tag } from "antd";
 import { CopyOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, LineChartOutlined, StarOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
+import { useRequest } from "ahooks";
+import { duplicateQuestionService, updateQuestionService } from "../services/question";
 
 type PropsType = {
     _id: string,
@@ -16,18 +18,56 @@ type PropsType = {
 const QuestionCard: FC<PropsType> = (props: PropsType) => {
     const nav = useNavigate()
     const { _id, title, createAt, isPublished, isStar, answerCount } = props
+
+    // 修改标星
+    const [isStarState, setIsStarState] = useState(isStar)
+
+    const {loading: changeStartLoading, run: changeStar} = useRequest(async () => {
+        await updateQuestionService(_id, {isStar: !isStarState})
+    }, {
+        manual: true,
+        onSuccess() {
+            setIsStarState(!isStarState)
+            message.success('已更新')
+        }
+    })
+
     const { confirm } = Modal
-    const duplicate = function() {
-        message.success('执行复制')
-    }
+
+    const { loading: duplicateLoading, run: duplicate } = useRequest(async () => {
+        const data = await duplicateQuestionService(_id)
+        return data
+    }, {
+        manual: true,
+        onSuccess(result) {
+            message.success('复制成功')
+            nav(`/question/edit/${result.id}`) //跳转到编辑页面
+        }
+    })
+
+    // 删除
+    const [isDeletedState, setIsDeletedState] = useState(false)
+    const {loading: deletedLoading, run: deleteQuestion} = useRequest(async () => {
+        await updateQuestionService(_id, {isDeleted: true})
+    }, {
+        manual: true,
+        onSuccess() {
+            message.success('删除成功')
+            setIsDeletedState(true)
+        }
+    })
 
     const del = function() {
         confirm ({
             title: "确定删除该问卷？",
             icon: <ExclamationCircleOutlined />,
-            onOk: () => message.success('执行删除')
+            onOk: deleteQuestion
         })
     }
+
+
+    // 已经删除的问卷不要再渲染卡片
+    if (isDeletedState) return null
 
     return (
         <>
@@ -36,10 +76,10 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
                     <div className={styles.left}>
                         <Link to={isPublished ? `/question/stat/${_id}` : `/question/edit/${_id}`}>
                             <Space>
-                                {isStar && <StarOutlined style={{color: 'red'}} />}
+                                {isStarState && <StarOutlined style={{color: 'red'}} />}
                                 {title}
                             </Space>
-                        </Link>
+                        </Link>                    
                     </div>
                     <div className={styles.right}>
                         <Space>
@@ -60,11 +100,11 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
                     </div>
                     <div className={styles.right}>
                         <span>
-                            <Button icon={<StarOutlined />} type="text" size="small">{isStar ? '取消标星' : '标星'}</Button>
+                            <Button icon={<StarOutlined />} type="text" size="small" onClick={changeStar} disabled={changeStartLoading}>{isStarState ? '取消标星' : '标星'}</Button>
                             <Popconfirm title="确定复制该问卷？" okText="确定" cancelText="取消"  onConfirm={duplicate}>
-                                <Button icon={<CopyOutlined />} type="text" size="small">复制</Button>
+                                <Button icon={<CopyOutlined />} type="text" size="small" disabled={duplicateLoading}>复制</Button>
                             </Popconfirm>
-                            <Button icon={<DeleteOutlined />} type="text" size="small" onClick={() => del()}>删除</Button>
+                            <Button icon={<DeleteOutlined />} type="text" size="small" onClick={() => del()} disabled={deletedLoading}>删除</Button>
                         </span>
                     </div>
                 </div>

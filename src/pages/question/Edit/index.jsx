@@ -1,12 +1,15 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import useLoadQuestion from "../../../hooks/useLoadQuestionData";
 
 const Edit = () => {
-    const { id } = useParams()
+
+    const { loading, data } = useLoadQuestion()
+
     return (
-        <>
-            <p>Edit {id}</p> 
-        </>
+        <div>
+            <p>Edit page</p>
+            {loading ? <p>loading</p> : <p>{JSON.stringify(data)}</p>}
+        </div>
     )
 }
 

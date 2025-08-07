@@ -1,35 +1,59 @@
-import { useTitle } from "ahooks";
-import { Typography, Empty, Table, Tag, Space, Button, Modal } from "antd";
+import { useRequest, useTitle } from "ahooks";
+import { Typography, Empty, Table, Tag, Space, Button, Modal, Spin, message } from "antd";
 import React, { useState } from "react";
 
 
 import styles from './common.module.scss'
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import ListSearch from "../../components/ListSearch";
+import useLoadQuestionListData from "../../hooks/useLoadQuestionListData";
+import ListPage from "../../components/ListPage";
+import { deleteQuestionsService, updateQuestionService } from "../../services/question";
 
 const { Title } = Typography
 const { confirm } = Modal
 
-const rawQuestionList = [
-    {_id: 'q1', title: '问卷1', isPublished: false, isStar: true, answerCount: 5, createAt: '3月10日 13:23'},
-    {_id: 'q2', title: '问卷2', isPublished: true, isStar: false, answerCount: 3, createAt: '3月11日 13:23'},
-    {_id: 'q3', title: '问卷3', isPublished: false, isStar: false, answerCount: 6, createAt: '3月12日 13:23'},
-]
 const Trash = () => {
     useTitle('YoYo问卷 - 回收站')
-    const [questionList, setQustionList] = useState(rawQuestionList)
 
+    const { data = {} , loading, refresh } = useLoadQuestionListData({ isDeleted: true })
+    const { list = [], total = 0 } = data
 
-    const [seledtedIds, setSelectedIds] = useState<string[]>([])
+    const [seledtedIds, setSelectedIds] = useState<string[]>([]) //记录选中的id
+
+    // 恢复
+    const { run: recover } = useRequest(async () => {
+        for await (const id of seledtedIds) {
+            await updateQuestionService(id, { isDeleted: false })
+        }
+    }, {
+        manual: true,
+        debounceWait: 500, //防抖
+        onSuccess() {
+            message.success('恢复成功')
+            refresh() //手动刷新列表
+            setSelectedIds([])
+        }
+    })
+
+    // 删除
+    const { run: deleteQuestion } = useRequest(async () => {
+        await deleteQuestionsService(seledtedIds)
+    }, {
+        manual: true,
+        onSuccess() {
+            message.success('删除成功')
+            refresh()
+            setSelectedIds([])
+        }
+    })
 
     function del() {
         confirm({
             title: '确认删除问卷',
             icon: <ExclamationCircleOutlined />,
             content:'删除以后不可以找回',
-            onOk: () => {
-                alert(`删除 ${JSON.stringify(seledtedIds)}`)
-            }
+            onOk: deleteQuestion
         })
     }
 
@@ -59,15 +83,15 @@ const Trash = () => {
         <>
             <div style={{marginBottom: '16px'}}>
                 <Space>
-                    <Button type="primary" disabled={seledtedIds.length === 0}>恢复</Button>
+                    <Button type="primary" disabled={seledtedIds.length === 0} onClick={recover}>恢复</Button>
                     <Button danger disabled={seledtedIds.length === 0} onClick={del}>删除</Button>
                 </Space>
             </div>
             <Table 
-                dataSource={questionList} 
+                dataSource={list} 
                 columns={tableColums} 
                 pagination={false} 
-                rowKey={(q) => q._id}
+                rowKey={(q: any) => q._id}
                 rowSelection={{
                     type:'checkbox',
                     onChange: (selectdRowKeys) => {
@@ -91,8 +115,17 @@ const Trash = () => {
 
 
              <div className={styles.content}>
-                {questionList.length === 0 && <Empty description="暂无数据" />}
-                {questionList.length > 0 && TableElem}
+                {loading && (
+                    <div style={{textAlign: 'center'}}>
+                        <Spin />
+                    </div>
+                )}
+                {!loading && list.length === 0 && <Empty description="暂无数据" />}
+                {list.length > 0 && TableElem}
+            </div>
+
+            <div className={styles.footer}>
+                <ListPage total={total} />
             </div>
 
         </>

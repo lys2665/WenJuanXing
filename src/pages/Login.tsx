@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Checkbox, Form, Input, Space, Typography } from "antd";
 
 import styles from "./Login.module.scss"
@@ -38,7 +38,6 @@ const Login = () => {
     }, [])
 
     const onFinish = (values: any) => {
-        console.log(values)
         const { username, password, remember } = values
         if (remember) {
             rememberUser(username, password)
