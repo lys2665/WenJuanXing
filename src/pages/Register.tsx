@@ -1,16 +1,31 @@
 import React from "react";
 import { UserAddOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Space, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Button, Form, Input, message, Space, Typography } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useRequest } from "ahooks";
 
 import styles from "./Register.module.scss"
 import { LOGIN_PATHNAME } from "../router";
+import { registerService } from "../services/user";
 
 const { Title } = Typography
 
 const Register = () => {
+    const nav = useNavigate()
+
+    const { run } =  useRequest(async values => {
+        const { username, password, nickname } = values
+        await registerService(username, password, nickname)
+    }, {
+        manual: true,
+        onSuccess() {
+            message.success('注册成功')
+            nav(LOGIN_PATHNAME)
+        }
+    })
+
     const onFinish = (values: any) => {
-        console.log(values)
+        run(values)
     }
     return (
         <div className={styles.container}>

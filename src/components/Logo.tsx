@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Space, Typography } from "antd";
 import { FormOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 import styles from './Logo.module.scss'
+import useGetUserInfo from "../hooks/useGetUserInfo";
+import { HOME_PATHNAME, MANAGE_INDEX_PATHNAME } from "../router";
 
 
 const { Title } = Typography
 
 const Logo = () => {
+    const { username } = useGetUserInfo()
+    const [pathname, setPathname] = useState(HOME_PATHNAME)
+
+    useEffect(() => {
+        if (username) {
+            setPathname(MANAGE_INDEX_PATHNAME)
+        }
+    }, [username])
+
     return (
         <div>
-            <Link to={'/'}>
+            <Link to={pathname}>
                 <Space className={styles.container}>
                     <Title>
                         <FormOutlined />
