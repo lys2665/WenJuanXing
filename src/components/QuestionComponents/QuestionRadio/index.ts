@@ -1,10 +1,10 @@
 /**
- * @description 问卷 输入框
+ * @description 问卷radio
  * @author liuyushuang
  */
 
 import Component from "./Component";
-import { QuestionInputDefaultProps } from "./interface";
+import { QuestionRadioDefaultProps } from "./interface";
 import PropComponent from "./PropComponent";
 
 export * from "./interface";
@@ -12,9 +12,9 @@ export * from "./interface";
 // 组建的配置
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: "输入框",
-  type: "questionInput",
+  title: "单选",
+  type: "questionRadio",
   Component, //画布显示的组件
   PropComponent, // 修改属性
-  defaultProps: QuestionInputDefaultProps,
+  defaultProps: QuestionRadioDefaultProps,
 };

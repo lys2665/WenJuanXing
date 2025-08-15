@@ -9,6 +9,7 @@ import {
 } from "../../../store/ComponentsReducer";
 import { getComponentConfByType } from "../../../components/QuestionComponents";
 import { useDispatch } from "react-redux";
+import useBindCanvasKeyPress from "../../../hooks/useBindCanvasKeyPress";
 
 type PropType = {
   loading: boolean;
@@ -33,6 +34,8 @@ const EditCanvas: FC<PropType> = ({ loading }) => {
     dispatch(changeSelectedId(id));
   }
 
+  useBindCanvasKeyPress()
+
   if (loading) {
     return (
       <div style={{ textAlign: "center", marginTop: "24px" }}>
@@ -42,27 +45,31 @@ const EditCanvas: FC<PropType> = ({ loading }) => {
   }
   return (
     <div className={styles.canvas}>
-      {componentList.map((c) => {
-        const { fe_id } = c;
+      {componentList
+        .filter((c) => !c.isHidden)
+        .map((c) => {
+          const { fe_id, isLocked } = c;
 
-        // 拼接class name
-        const wrapperDefaultClassName = styles["component-wrapper"];
-        const selectedClassName = styles.selected;
-        const wrapperClassName = classNames({
-          [wrapperDefaultClassName]: true,
-          [selectedClassName]: fe_id === selectedId,
-        });
+          // 拼接class name
+          const wrapperDefaultClassName = styles["component-wrapper"];
+          const selectedClassName = styles.selected;
+          const lockedClassName = styles.locked;
+          const wrapperClassName = classNames({
+            [wrapperDefaultClassName]: true,
+            [selectedClassName]: fe_id === selectedId,
+            [lockedClassName]: isLocked,
+          });
 
-        return (
-          <div
-            key={fe_id}
-            className={wrapperClassName}
-            onClick={(e) => handleClick(e, fe_id)}
-          >
-            <div className={styles.component}>{genComponent(c)}</div>
-          </div>
-        );
-      })}
+          return (
+            <div
+              key={fe_id}
+              className={wrapperClassName}
+              onClick={(e) => handleClick(e, fe_id)}
+            >
+              <div className={styles.component}>{genComponent(c)}</div>
+            </div>
+          );
+        })}
     </div>
   );
 };

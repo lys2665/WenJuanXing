@@ -1,10 +1,10 @@
 /**
- * @description 问卷 输入框
+ * @description 问卷 段落
  * @author liuyushuang
  */
 
 import Component from "./Component";
-import { QuestionTitleDefaultProps } from "./interface";
+import { QuestionParagraphDefaultProps } from "./interface";
 import PropComponent from "./PropComponent";
 
 export * from "./interface";
@@ -12,9 +12,9 @@ export * from "./interface";
 // 配置 config
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: "标题",
-  type: 'questionTitle',
+  title: "段落",
+  type: 'questionParagraph',
   Component,
   PropComponent,
-  defaultProps: QuestionTitleDefaultProps
+  defaultProps: QuestionParagraphDefaultProps
 }

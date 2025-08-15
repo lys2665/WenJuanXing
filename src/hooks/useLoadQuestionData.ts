@@ -30,7 +30,7 @@ function useLoadQuestionData() {
     if (componentList.length > 0) {
       selectedId = componentList[0].fe_id;
     }
-    dispatch(resetComponents({ componentList, selectedId }));
+    dispatch(resetComponents({ componentList, selectedId, copiedComponent: null }));
   }, [data]);
 
   // 判断 id 变化， 执行 ajax 加载问卷数据
