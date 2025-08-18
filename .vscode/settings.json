@@ -9,5 +9,5 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["craco", "downarrow", "uparrow"]
+  "cSpell.words": ["Appstore", "craco", "downarrow", "undoable", "uparrow"]
 }

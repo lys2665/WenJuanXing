@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #f0f2f5;
 }
 
@@ -16,7 +16,7 @@
     height: 100%;
 
     .left {
-        width: 285px;
+        width: 295px;
         background-color: #fff;
         padding: 0 12px;
     }
