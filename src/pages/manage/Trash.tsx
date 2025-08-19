@@ -19,11 +19,11 @@ const Trash = () => {
     const { data = {} , loading, refresh } = useLoadQuestionListData({ isDeleted: true })
     const { list = [], total = 0 } = data
 
-    const [seledtedIds, setSelectedIds] = useState<string[]>([]) //记录选中的id
+    const [selectedIds, setSelectedIds] = useState<string[]>([]) //记录选中的id
 
     // 恢复
     const { run: recover } = useRequest(async () => {
-        for await (const id of seledtedIds) {
+        for await (const id of selectedIds) {
             await updateQuestionService(id, { isDeleted: false })
         }
     }, {
@@ -38,7 +38,7 @@ const Trash = () => {
 
     // 删除
     const { run: deleteQuestion } = useRequest(async () => {
-        await deleteQuestionsService(seledtedIds)
+        await deleteQuestionsService(selectedIds)
     }, {
         manual: true,
         onSuccess() {
@@ -57,7 +57,7 @@ const Trash = () => {
         })
     }
 
-    const tableColums = [
+    const tableColumns = [
         {
             title: '标题',
             dataIndex: 'title'
@@ -83,13 +83,13 @@ const Trash = () => {
         <>
             <div style={{marginBottom: '16px'}}>
                 <Space>
-                    <Button type="primary" disabled={seledtedIds.length === 0} onClick={recover}>恢复</Button>
-                    <Button danger disabled={seledtedIds.length === 0} onClick={del}>删除</Button>
+                    <Button type="primary" disabled={selectedIds.length === 0} onClick={recover}>恢复</Button>
+                    <Button danger disabled={selectedIds.length === 0} onClick={del}>删除</Button>
                 </Space>
             </div>
             <Table 
                 dataSource={list} 
-                columns={tableColums} 
+                columns={tableColumns} 
                 pagination={false} 
                 rowKey={(q: any) => q._id}
                 rowSelection={{

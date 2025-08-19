@@ -8,6 +8,8 @@ import { changeSelectedId } from "../../../store/ComponentsReducer";
 import LeftPanel from "./LeftPanel";
 import RightPanel from "./RightPanel";
 import EditHeader from "./EditHeader";
+import useGetPageInfo from "../../../hooks/useGetPageInfo";
+import { useTitle } from "ahooks";
 
 const Edit = () => {
   const dispatch = useDispatch();
@@ -17,6 +19,9 @@ const Edit = () => {
   function clearSelectedId() {
     dispatch(changeSelectedId(""));
   }
+
+  const { title } = useGetPageInfo()
+  useTitle(`问卷编辑 - ${title}`)
 
   return (
     <div className={styles.container}>

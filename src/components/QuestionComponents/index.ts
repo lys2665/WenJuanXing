@@ -8,15 +8,26 @@ import QuestionInfoConf, { QuestionInfoPropsType } from "./QuestionInfo";
 import QuestionTextareaConf, {
   QuestionTextareaPropsType,
 } from "./QuestionTextarea";
-import QuestionRadioConf, { QuestionRadioPropsType } from "./QuestionRadio";
-import QuestionCheckboxConf, { QuestionCheckboxPropsType } from "./QuestionCheckbox";
+import QuestionRadioConf, {
+  QuestionRadioPropsType,
+  QuestionRadioStatPropsType,
+} from "./QuestionRadio";
+import QuestionCheckboxConf, {
+  QuestionCheckboxPropsType,
+  QuestionCheckboxStatPropsType,
+} from "./QuestionCheckbox";
 
 // 各个组件的 prop type
 export type ComponentPropsType = QuestionInputPropsType &
   QuestionTitlePropsType &
   QuestionParagraphPropsType &
   QuestionInfoPropsType &
-  QuestionTextareaPropsType & QuestionRadioPropsType & QuestionCheckboxPropsType;
+  QuestionTextareaPropsType &
+  QuestionRadioPropsType &
+  QuestionCheckboxPropsType;
+
+export type ComponentStatPropsType = QuestionRadioStatPropsType &
+  QuestionCheckboxStatPropsType;
 
 // 组建的配置
 export type ComponentConfType = {
@@ -25,6 +36,7 @@ export type ComponentConfType = {
   Component: FC<ComponentPropsType>;
   PropComponent: FC<ComponentPropsType>;
   defaultProps: ComponentPropsType;
+  StatComponent?: FC<ComponentStatPropsType>;
 };
 
 // 全部的组建配置的列表
@@ -35,7 +47,7 @@ const componentList: ComponentConfType[] = [
   QuestionInfoConf,
   QuestionTextareaConf,
   QuestionRadioConf,
-  QuestionCheckboxConf
+  QuestionCheckboxConf,
 ];
 
 // 组件分组
@@ -53,8 +65,8 @@ export const componentConfGroup = [
   {
     groupId: "chooseGroup",
     groupName: "用户选择",
-    components: [QuestionRadioConf, QuestionCheckboxConf]
-  }
+    components: [QuestionRadioConf, QuestionCheckboxConf],
+  },
 ];
 
 export function getComponentConfByType(type: string) {

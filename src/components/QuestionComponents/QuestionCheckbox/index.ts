@@ -1,20 +1,21 @@
 /**
- * @description 问卷checkbox
- * @author liuyushuang
- */
+ * @Description checkbox组件
+ * @Author      liuyushuang
+ * */
 
 import Component from "./Component";
-import { QuestionCheckboxDefaultProps } from "./interface";
 import PropComponent from "./PropComponent";
+import StatComponent from "./StatComponent";
+import { QuestionCheckboxDefaultProps } from "./interface";
 
 export * from "./interface";
 
-// 组建的配置
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   title: "多选",
-  type: "questionCheckbox",
-  Component, //画布显示的组件
-  PropComponent, // 修改属性
+  type: "questionCheckbox", // 要和后端统一好
+  Component,
+  PropComponent,
+  StatComponent,
   defaultProps: QuestionCheckboxDefaultProps,
 };
